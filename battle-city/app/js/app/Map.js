@@ -29,14 +29,12 @@ var Map = function(map) {
             }
             var map = Game.instance.getMap();
             map[cellY][cellX] = cellVal;
-            _.each(this.getCell(cellX, cellY), function(tail){
-                tail.texture = this.getTail(cellVal).texture;
-            }, this);
+            this.getCell(cellX, cellY).texture = this.getTail(cellVal).texture;
             
             return this;
         },
         getCell: function(cellX, cellY) {
-            return _.filter(Game.instance.getChildrenByType(['tail']), function(tail) {
+            return _.find(Game.instance.getChildrenByType(['tail']), function(tail) {
                 return tail.cellX === cellX && tail.cellY === cellY;
             });
         },

@@ -34,18 +34,25 @@ window.onload = function() {
                 document.body.appendChild(this.renderer.view);
                 this.stage = new PIXI.Container();
                 requestAnimationFrame(GameLoop.animate);
+                
+                // Frame rate counter
+                GameLoop.frameRate = 0;
+                setInterval(function() { 
+                    document.getElementById('frameRate').innerHTML = 'FPS: ' + GameLoop.frameRate;
+                    GameLoop.frameRate = 0; 
+                }, 1000);
             },
             animate: function() {
+                GameLoop.frameRate++;
                 requestAnimationFrame(GameLoop.animate);
                 GameLoop.renderer.render(GameLoop.stage);
                 _curUnixTime = new Date().getTime();
                 _timeDelta = _curUnixTime - _prevUnixTime;
                 _prevUnixTime = _curUnixTime;
-                _.each(GameLoop.stage.children, function(child) { 
-                        try { child.render(); } catch (e) {}
-                        try { child.AIPlay(); } catch (e) {}
-                    }
-                );
+                _.each(Game.instance.getChildrenByType(['tank','shell']), function(model) { 
+                    try { model.render(); } catch (e) {}
+                    try { model.AIPlay(); } catch (e) {}
+                });
             },
             getTime: function() {
                 return new Date().getTime();
